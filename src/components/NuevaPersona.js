@@ -4,7 +4,7 @@ import 'antd/dist/antd.css'
 
 import { useDispatch, useSelector } from "react-redux";
 //actions
-import { crearNuevaPersonaAction, obtenerPersonaEditar,} from "../actions/personaAction";
+import { crearNuevaPersonaAction, editarPersonaAction, obtenerPersonaEditar,} from "../actions/personaAction";
 import { useParams } from "react-router-dom";
 
 const NuevaPersona = () => {
@@ -14,13 +14,14 @@ const { id } = useParams();
   // usamos useDispatch
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    
-    const prueba = () => dispatch(obtenerPersonaEditar(id))
-    prueba()
-    
-  },[])
+  useEffect(() => {
+    if (id) {
+      const prueba = () => dispatch(obtenerPersonaEditar(id))
+      prueba()
+    }
+  }, [])
   
+  const persona = useSelector((state)=>state?.personas?.persona)
 
   //mandar a llamar el action de personaAction
   const agregarPersona = (persona) =>
@@ -28,10 +29,28 @@ const { id } = useParams();
 
   //submit
   const submitPersona = (data) => {
-    agregarPersona({
+    if(id){
+        dispatch(editarPersonaAction(id,data))
+       console.log(data)
+        
+    }else {
+      agregarPersona({
       ...data
     });
+    }
   };
+
+  useEffect(() => {
+    if (persona && id) {
+      form.setFieldsValue({
+        name: persona.name,
+        email: persona.email,
+        gender: persona.gender,
+        status: persona.status
+      })
+    }
+  }, [id, persona])
+ 
 
   return (
     <div className="row justify-content-center">
@@ -39,7 +58,7 @@ const { id } = useParams();
         <div className="card">
           <div className="card-body" >
             <h2 className="text-center mb-4 font-weight-bold">
-              
+
             {id ? "Editar Persona" : "Nueva Persona"}
             
             </h2>

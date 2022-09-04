@@ -6,7 +6,9 @@ AGREGAR_PERSONA_ERROR,
 COMENZAR_DESCARGA_PERSONA,
 DESCARGA_PERSONA_EXITO,
 DESCARGA_PERSONA_ERROR,
-OBTENER_PERSONA_EDITAR
+OBTENER_PERSONA_EDITAR,
+PERSONA_EDITADA_EXITO,
+PERSONA_EDITADA_ERROR
 } from "../types"
 
 const initialState = {
@@ -49,6 +51,21 @@ export default function (state = initialState, action){
             return{
                 ...state,
                 persona: action.payload
+            }
+        case PERSONA_EDITADA_EXITO:
+            return{
+                ...state,
+                personaeditar:null,
+                personas: state.personas.map(persona =>
+                persona.id===action.payload.id ? persona = action.payload:
+                persona
+            )
+            }
+        case PERSONA_EDITADA_ERROR:
+            return{
+                ...state,
+                loading: false,
+                error: action.payload
             }
         default:
             return state;

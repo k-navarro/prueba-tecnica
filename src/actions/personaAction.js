@@ -6,13 +6,17 @@ import {
   COMENZAR_DESCARGA_PERSONA,
   DESCARGA_PERSONA_EXITO,
   DESCARGA_PERSONA_ERROR,
-  OBTENER_PERSONA_EDITAR
+  OBTENER_PERSONA_EDITAR,
+  COMENZAR_EDICION_PERSONA,
+  PERSONA_EDITADA_EXITO,
+  PERSONA_EDITADA_ERROR
 
 } from "../types";
 import axios from "axios";
 
 import { useFetch } from "../config/axios";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 // crear nueva persona
 const accestoken =
@@ -100,11 +104,7 @@ export function obtenerPersonaEditar (id) {
       try {
         const { requestAxios } = useFetch();
             const personas = await requestAxios.get(`/public/v2/users/${id}`);
-            dispatch(obtenerPersonaEditarAction(personas.id))
-            console.log(personas.data)
-            
-           
-            
+            dispatch(obtenerPersonaEditarAction(personas.data))          
       } catch (error) {
         console.log(error,"error")
       }
@@ -112,3 +112,39 @@ export function obtenerPersonaEditar (id) {
   }
 
 }
+
+
+export function editarPersonaAction (persona,data){
+  
+    return async (dispatch) => {
+      dispatch(editarPersona(persona))
+
+      try {
+        
+        const { requestAxios } = useFetch();
+       const personas= await requestAxios.put(`/public/v2/users/${persona}`,data);
+              
+              dispatch(editarPersonaExito(personas.data ))
+              console.log(personas,"aquiiii")
+              console.log(data,"data del servisio")
+              
+      } catch (error) {
+        dispatch(editarPersonaError(error))
+      }
+    
+    }
+}
+
+const editarPersona = () =>({
+    type:COMENZAR_EDICION_PERSONA,
+})
+
+const editarPersonaExito = persona =>({
+  type:PERSONA_EDITADA_EXITO,
+  payload:persona
+})
+
+const editarPersonaError = () => ({
+  type:PERSONA_EDITADA_ERROR,
+  payload: true
+})
