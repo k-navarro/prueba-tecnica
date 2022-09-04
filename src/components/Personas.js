@@ -1,26 +1,27 @@
-import { Button, Table, Tooltip } from "antd";
-import React, { Fragment, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { borrarPersonaAction, obtenerPersonaAction } from "../actions/personaAction";
 import { AiFillDelete, AiOutlineEdit } from "react-icons/ai";
-import { Link,} from "react-router-dom";
+import { Fragment, useEffect } from "react";
+import { Table, Tooltip } from "antd";
+import {
+  borrarPersonaAction,
+  obtenerPersonasAction,
+} from "../actions/personaAction";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Link } from "react-router-dom";
 
 const Personas = () => {
-  
   const dispatch = useDispatch();
-  useEffect(() => {
-    const cargarPersona = () => dispatch(obtenerPersonaAction());
-    cargarPersona();
-  }, []);
-
-  
+  const personas = useSelector((state) => state.personas.personas);
 
   const eliminarPersona = (id) => {
-    dispatch(borrarPersonaAction(id))
+    dispatch(borrarPersonaAction(id));
   };
 
+  useEffect(() => {
+    const cargarPersona = () => dispatch(obtenerPersonasAction());
+    cargarPersona();
+  }, [dispatch]);
 
-  const personas = useSelector((state) => state.personas.personas);
   const columna = [
     {
       title: "ID",
@@ -57,30 +58,30 @@ const Personas = () => {
       key: "action",
       render: (_, record) => (
         <Fragment>
-          <Tooltip title="Eliminar">
+          <Tooltip title='Eliminar'>
             <button
-              style={{ border: "none", background: "transparent" , marginRight:'5px' }}
+              style={{
+                border: "none",
+                background: "transparent",
+                marginRight: "5px",
+              }}
               onClick={() => eliminarPersona(record.id)}
             >
-              <AiFillDelete size={24} color="#FF7851" />
+              <AiFillDelete size={24} color='#FF7851' />
             </button>
           </Tooltip>
 
-          <Tooltip title="Edit plan" placement="bottom" >
+          <Tooltip title='Edit plan' placement='bottom'>
             <Link to={`/persona/editar/${record.id}`}>
-              <AiOutlineEdit size={24} color="#FF7851" />
+              <AiOutlineEdit size={24} color='#FF7851' />
             </Link>
           </Tooltip>
         </Fragment>
       ),
     },
   ];
-  
-  return (
-    <Fragment>
-      <Table dataSource={personas} columns={columna} />
-    </Fragment>
-  );
+
+  return <Table dataSource={personas} columns={columna} />;
 };
 
 export default Personas;

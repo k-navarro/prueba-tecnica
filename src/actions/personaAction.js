@@ -1,188 +1,161 @@
 import {
   AGREGAR_PERSONA,
-  AGREGAR_PERSONA_EXITO,
   AGREGAR_PERSONA_ERROR,
-  
-  COMENZAR_DESCARGA_PERSONA,
-  DESCARGA_PERSONA_EXITO,
-  DESCARGA_PERSONA_ERROR,
-
-  OBTENER_PERSONA_EDITAR,
+  AGREGAR_PERSONA_EXITO,
+  COMENZAR_DESCARGA_PERSONAS,
   COMENZAR_EDICION_PERSONA,
-  PERSONA_EDITADA_EXITO,
-  PERSONA_EDITADA_ERROR,
-
+  DESCARGA_PERSONAS_ERROR,
+  DESCARGA_PERSONAS_EXITO,
+  OBTENER_PERSONA_EDITAR,
   OBTENER_PERSONA_ELIMINAR,
+  PERSONA_EDITADA_ERROR,
+  PERSONA_EDITADA_EXITO,
+  PERSONA_ELIMINADA_ERROR,
   PERSONA_ELIMINADA_EXITO,
-  PERSONA_ELIMINADA_ERROR
-
 } from "../types";
-import axios from "axios";
 
-import { useFetch } from "../config/axios";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
-
-// crear nueva persona
-const accestoken =
-  "b8b84db74ed0a638cecdb1b5510ba7835bec9654043690d66691c90b51444a07";
-
-export function crearNuevaPersonaAction(persona) {
-  return async (dispatch) => {
-    dispatch(agregarPersona());
-
-    try {
-      const { requestAxios } = useFetch();
-      await requestAxios.post("/public/v2/users", persona);
-
-      toast.success("El usuario se ha creado exitosamente");
-
-      dispatch(agregarPersonaExito(persona));
-
-    } catch (error) {
-      toast.error(`Ooops! parece que tenemos un error - ${error?.message} ` );
-      
-
-      dispatch(agregarPersonaError(true));
-    }
-  };
-}
+import { useFetch } from "../config/axios";
 
 const agregarPersona = () => ({
   type: AGREGAR_PERSONA,
   payload: true,
 });
 
-//guardar producto en la base de datos
 const agregarPersonaExito = (persona) => ({
   type: AGREGAR_PERSONA_EXITO,
   payload: persona,
 });
 
-//error al guardar producto en la base de datos
 const agregarPersonaError = (estado) => ({
   type: AGREGAR_PERSONA_ERROR,
   payload: estado,
 });
 
-export function obtenerPersonaAction (){
-    return async (dispatch)=>{
-        dispatch(descargarPersona())
 
-        try {
-            const { requestAxios } = useFetch();
-            const personas = await requestAxios.get("/public/v2/users");
-            dispatch(descargarPersonaExito(personas.data))
-
-            
-        } catch (error) {
-              dispatch(descargarPersonaError(error))
-        }
+export const crearNuevaPersonaAction = (persona) => {
+  return async (dispatch) => {
+    dispatch(agregarPersona());
+    try {
+      const { requestAxios } = useFetch();
+      await requestAxios.post("/public/v2/users", persona);
+      toast.success("El usuario se ha creado exitosamente");
+      dispatch(agregarPersonaExito(persona));
+    } catch (error) {
+      toast.error(`Ooops! parece que tenemos un error - ${error?.message} `);
+      dispatch(agregarPersonaError(true));
     }
+  };
 }
 
-const descargarPersona = () =>({
-    type: COMENZAR_DESCARGA_PERSONA,
-    payload:true
+const descargarPersonas = () => ({
+  type: COMENZAR_DESCARGA_PERSONAS,
+  payload: true,
 });
 
-const descargarPersonaExito = (persona) => ({
-    type: DESCARGA_PERSONA_EXITO,
-    payload: persona
+const descargarPersonasExito = (persona) => ({
+  type: DESCARGA_PERSONAS_EXITO,
+  payload: persona,
+});
 
-})
+const descargarPersonasError = () => ({
+  type: DESCARGA_PERSONAS_ERROR,
+  payload: true,
+});
 
-const descargarPersonaError = () =>({
-  type:DESCARGA_PERSONA_ERROR,
-  payload: true
-})
-
-export const obtenerPersonaedit = persona =>{
-  return(dispatch)=>{
-      dispatch(obtenerPersonaEditarAction(persona))
-  }
-}
-const obtenerPersonaEditarAction = persona =>({
-  type:OBTENER_PERSONA_EDITAR,
-  payload: persona
-})
-
-export function obtenerPersonaEditar (id) {
-  return async(dispatch) =>{
-      dispatch(obtenerPersonaedit(id))
-    
-      try {
-        const { requestAxios } = useFetch();
-            const personas = await requestAxios.get(`/public/v2/users/${id}`);
-            dispatch(obtenerPersonaEditarAction(personas.data))          
-      } catch (error) {
-        console.log(error,"error")
-      }
-      
-  }
-
-}
-
-
-export function editarPersonaAction (persona,data){
-  
-    return async (dispatch) => {
-      dispatch(editarPersona(persona))
-
-      try {
-        
-        const { requestAxios } = useFetch();
-       const personas= await requestAxios.put(`/public/v2/users/${persona}`,data);
-              
-              dispatch(editarPersonaExito(personas.data ))
-              console.log(personas,"aquiiii")
-              console.log(data,"data del servisio")
-              
-      } catch (error) {
-        dispatch(editarPersonaError(error))
-      }
-    
+export const obtenerPersonasAction = () => {
+  return async (dispatch) => {
+    dispatch(descargarPersonas());
+    try {
+      const { requestAxios } = useFetch();
+      const personas = await requestAxios.get("/public/v2/users");
+      dispatch(descargarPersonasExito(personas.data));
+    } catch (error) {
+      dispatch(descargarPersonasError(error));
     }
+  };
 }
 
-const editarPersona = () =>({
-    type:COMENZAR_EDICION_PERSONA,
-})
+const obtenerPersonaEditarAction = (persona) => ({
+  type: OBTENER_PERSONA_EDITAR,
+  payload: persona,
+});
 
-const editarPersonaExito = persona =>({
-  type:PERSONA_EDITADA_EXITO,
-  payload:persona
-})
+export const obtenerPersonaedit = (persona) => {
+  return (dispatch) => {
+    dispatch(obtenerPersonaEditarAction(persona));
+  };
+};
+
+export const obtenerPersonaEditar = (id) => {
+  return async (dispatch) => {
+    dispatch(obtenerPersonaedit(id));
+
+    try {
+      const { requestAxios } = useFetch();
+      const personas = await requestAxios.get(`/public/v2/users/${id}`);
+      dispatch(obtenerPersonaEditarAction(personas.data));
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+}
+
+const editarPersona = () => ({
+  type: COMENZAR_EDICION_PERSONA,
+});
+
+
+const editarPersonaExito = (persona) => ({
+  type: PERSONA_EDITADA_EXITO,
+  payload: persona,
+});
 
 const editarPersonaError = () => ({
-  type:PERSONA_EDITADA_ERROR,
-  payload: true
-})
+  type: PERSONA_EDITADA_ERROR,
+  payload: true,
+});
 
-export function borrarPersonaAction (id) {
-  return async (dispatch) =>{
-      dispatch(obtenerPersonaEliminar(id))
-      try {
-        const { requestAxios } = useFetch();
-        await requestAxios.delete(`/public/v2/users/${id}`);
-        dispatch(eliminarPersonaExito(id))
 
-      } catch (error) {
-        dispatch(eliminarPersonaError())
-      }
-
-  }
+export const editarPersonaAction = (id, data) => {
+  return async (dispatch) => {
+    dispatch(editarPersona(id));
+    try {
+      const { requestAxios } = useFetch();
+      const persona = await requestAxios.put(
+        `/public/v2/users/${id}`,
+        data
+      );
+      dispatch(editarPersonaExito(persona.data));
+    } catch (error) {
+      dispatch(editarPersonaError(error));
+    }
+  };
 }
 
-const obtenerPersonaEliminar = id =>({
-  type:OBTENER_PERSONA_ELIMINAR,
-  payload: id
-})
+const obtenerPersonaEliminar = (id) => ({
+  type: OBTENER_PERSONA_ELIMINAR,
+  payload: id,
+});
 
-const eliminarPersonaExito = () =>({
-    type: PERSONA_ELIMINADA_EXITO
-})
-const eliminarPersonaError = () =>({
+const eliminarPersonaExito = () => ({
+  type: PERSONA_ELIMINADA_EXITO,
+});
+const eliminarPersonaError = () => ({
   type: PERSONA_ELIMINADA_ERROR,
-  payload: true
-})
+  payload: true,
+});
+
+
+export const borrarPersonaAction = (id) => {
+  return async (dispatch) => {
+    dispatch(obtenerPersonaEliminar(id));
+    try {
+      const { requestAxios } = useFetch();
+      await requestAxios.delete(`/public/v2/users/${id}`);
+      dispatch(eliminarPersonaExito(id));
+    } catch (error) {
+      dispatch(eliminarPersonaError());
+    }
+  };
+}
