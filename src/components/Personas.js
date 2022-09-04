@@ -1,7 +1,7 @@
 import { Button, Table, Tooltip } from "antd";
 import React, { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerPersonaAction } from "../actions/personaAction";
+import { borrarPersonaAction, obtenerPersonaAction } from "../actions/personaAction";
 import { AiFillDelete, AiOutlineEdit } from "react-icons/ai";
 import { Link,} from "react-router-dom";
 
@@ -16,7 +16,7 @@ const Personas = () => {
   
 
   const eliminarPersona = (id) => {
-    console.log(id);
+    dispatch(borrarPersonaAction(id))
   };
 
 

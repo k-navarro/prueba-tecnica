@@ -6,10 +6,15 @@ import {
   COMENZAR_DESCARGA_PERSONA,
   DESCARGA_PERSONA_EXITO,
   DESCARGA_PERSONA_ERROR,
+
   OBTENER_PERSONA_EDITAR,
   COMENZAR_EDICION_PERSONA,
   PERSONA_EDITADA_EXITO,
-  PERSONA_EDITADA_ERROR
+  PERSONA_EDITADA_ERROR,
+
+  OBTENER_PERSONA_ELIMINAR,
+  PERSONA_ELIMINADA_EXITO,
+  PERSONA_ELIMINADA_ERROR
 
 } from "../types";
 import axios from "axios";
@@ -71,7 +76,7 @@ export function obtenerPersonaAction (){
 
             
         } catch (error) {
-            
+              dispatch(descargarPersonaError(error))
         }
     }
 }
@@ -85,6 +90,11 @@ const descargarPersonaExito = (persona) => ({
     type: DESCARGA_PERSONA_EXITO,
     payload: persona
 
+})
+
+const descargarPersonaError = () =>({
+  type:DESCARGA_PERSONA_ERROR,
+  payload: true
 })
 
 export const obtenerPersonaedit = persona =>{
@@ -146,5 +156,33 @@ const editarPersonaExito = persona =>({
 
 const editarPersonaError = () => ({
   type:PERSONA_EDITADA_ERROR,
+  payload: true
+})
+
+export function borrarPersonaAction (id) {
+  return async (dispatch) =>{
+      dispatch(obtenerPersonaEliminar(id))
+      try {
+        const { requestAxios } = useFetch();
+        await requestAxios.delete(`/public/v2/users/${id}`);
+        dispatch(eliminarPersonaExito(id))
+
+      } catch (error) {
+        dispatch(eliminarPersonaError())
+      }
+
+  }
+}
+
+const obtenerPersonaEliminar = id =>({
+  type:OBTENER_PERSONA_ELIMINAR,
+  payload: id
+})
+
+const eliminarPersonaExito = () =>({
+    type: PERSONA_ELIMINADA_EXITO
+})
+const eliminarPersonaError = () =>({
+  type: PERSONA_ELIMINADA_ERROR,
   payload: true
 })

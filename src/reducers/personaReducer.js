@@ -8,14 +8,18 @@ DESCARGA_PERSONA_EXITO,
 DESCARGA_PERSONA_ERROR,
 OBTENER_PERSONA_EDITAR,
 PERSONA_EDITADA_EXITO,
-PERSONA_EDITADA_ERROR
+PERSONA_EDITADA_ERROR,
+OBTENER_PERSONA_ELIMINAR,
+PERSONA_ELIMINADA_EXITO,
+PERSONA_ELIMINADA_ERROR
 } from "../types"
 
 const initialState = {
     personas: [],
     error: null,
     loading: false,
-    persona: null
+    persona: null,
+    personaeliminar: null
 }
 
 export default function (state = initialState, action){
@@ -47,6 +51,11 @@ export default function (state = initialState, action){
                 ...state,
                 personas: action.payload
             }
+        case DESCARGA_PERSONA_ERROR:
+            return{
+                ...state,
+                loading: action.payload
+            }
         case OBTENER_PERSONA_EDITAR:
             return{
                 ...state,
@@ -62,6 +71,23 @@ export default function (state = initialState, action){
             )
             }
         case PERSONA_EDITADA_ERROR:
+            return{
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        case OBTENER_PERSONA_ELIMINAR:
+            return{
+                ...state,
+                personaeliminar: action.payload
+            }
+        case PERSONA_ELIMINADA_EXITO:
+            return{
+                ...state,
+                personas: state.personas.filter(personas=>personas.id !== state.personaeliminar),
+                personaeliminar:null
+            }
+        case PERSONA_ELIMINADA_ERROR:
             return{
                 ...state,
                 loading: false,
