@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import 'antd/dist/antd.css'
 
 import { useDispatch, useSelector } from "react-redux";
 //actions
-import { crearNuevaPersonaAction,} from "../actions/personaAction";
+import { crearNuevaPersonaAction, obtenerPersonaEditar,} from "../actions/personaAction";
 import { useParams } from "react-router-dom";
 
 const NuevaPersona = () => {
@@ -14,7 +14,12 @@ const { id } = useParams();
   // usamos useDispatch
   const dispatch = useDispatch();
 
-  
+  useEffect(()=>{
+    
+    const prueba = () => dispatch(obtenerPersonaEditar(id))
+    prueba()
+    
+  },[])
   
 
   //mandar a llamar el action de personaAction
@@ -34,6 +39,7 @@ const { id } = useParams();
         <div className="card">
           <div className="card-body" >
             <h2 className="text-center mb-4 font-weight-bold">
+              
             {id ? "Editar Persona" : "Nueva Persona"}
             
             </h2>

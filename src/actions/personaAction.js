@@ -100,7 +100,8 @@ export function obtenerPersonaEditar (id) {
       try {
         const { requestAxios } = useFetch();
             const personas = await requestAxios.get(`/public/v2/users/${id}`);
-            dispatch(descargarPersonaExito(personas.id))
+            dispatch(obtenerPersonaEditarAction(personas.id))
+            console.log(personas.data)
             
            
             
