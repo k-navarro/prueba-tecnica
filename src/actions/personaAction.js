@@ -63,12 +63,14 @@ const descargarPersonasError = () => ({
   payload: true,
 });
 
-export const obtenerPersonasAction = () => {
+export const obtenerPersonasAction = (page = 1) => {
   return async (dispatch) => {
     dispatch(descargarPersonas());
     try {
       const { requestAxios } = useFetch();
-      const personas = await requestAxios.get("/public/v2/users");
+      const personas = await requestAxios.get("/public/v2/users", {params:{
+        page
+      }});
       dispatch(descargarPersonasExito(personas.data));
     } catch (error) {
       dispatch(descargarPersonasError(error));

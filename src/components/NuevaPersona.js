@@ -7,14 +7,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const NuevaPersona = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const persona = useSelector((state) => state?.personas?.persona);
-
+  const navigate = useNavigate();
   const agregarPersona = (persona) =>
     dispatch(crearNuevaPersonaAction(persona));
 
@@ -24,6 +24,7 @@ const NuevaPersona = () => {
     } else {
       agregarPersona({ ...data });
     }
+    navigate("/")
   };
 
   useEffect(() => {
@@ -41,6 +42,8 @@ const NuevaPersona = () => {
         gender: persona.gender,
         status: persona.status,
       });
+    } else {
+      form.resetFields()
     }
   }, [form, id, persona]);
 
