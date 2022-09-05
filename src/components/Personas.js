@@ -99,20 +99,21 @@ const Personas = () => {
     <div>
       <Table pagination={false}
         dataSource={personas} columns={columna} />
-
+    <div className="text-right mt-1 mb-2">
       <button 
-        className="btn btn-primary font-weight-bold text-uppercase mr-3 " 
+        className="btn-outline-secondary text-uppercase mr-3 text-right mb-3 " 
         disabled={countPage === 1} onClick={() => {
         setCountPage(countPage - 1)
         const cargarPersona = () => dispatch(obtenerPersonasAction(countPage - 1));
         cargarPersona();
       }}>Anterior</button>
-      <button className="btn btn-primary font-weight-bold text-uppercase  mr-3 " onClick={() => {
+      <button className="btn-outline-secondary font-weight-bold text-uppercase  mr-3 mb-3 " onClick={() => {
         setCountPage(countPage + 1)
         const cargarPersona = () => dispatch(obtenerPersonasAction(countPage + 1));
         cargarPersona();
       }}>Siguiente</button>
     </div>
+  </div>
   );
 };
 
